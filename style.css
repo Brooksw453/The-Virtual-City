@@ -1,0 +1,118 @@
+/* Basic reset and typography */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #111; /* dark background for contrast */
+  color: #f0f0f0;
+}
+h1 {
+  font-size: 1.5em;
+  margin: 0.5em;
+  text-align: center;
+}
+
+/* Status bar at top */
+#statusBar {
+  background: #333;
+  padding: 0.5em;
+  text-align: center;
+}
+#statusBar p {
+  margin: 0.2em;
+}
+
+/* Controls section styling */
+#controls {
+  background: #222;
+  padding: 0.5em;
+  text-align: center;
+}
+.buy-buttons button, 
+.jobs-panel button, 
+.upgrade-panel button, 
+.rebirth-panel button {
+  margin: 0.3em;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  background: #444;
+  color: #fff;
+}
+.buy-buttons button:hover:enabled,
+.jobs-panel button:hover:enabled,
+.upgrade-panel button:hover:enabled,
+.rebirth-panel button:hover:enabled {
+  background: #666;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Jobs panel and others spacing */
+#controls .jobs-panel, 
+#controls .upgrade-panel, 
+#controls .rebirth-panel {
+  margin: 0.5em 0;
+}
+#controls label {
+  margin-right: 0.5em;
+}
+#jobStatus {
+  font-size: 0.9em;
+  color: #ccc;
+  margin-top: 0.3em;
+}
+
+/* Map container fills remaining viewport height */
+#mapContainer {
+  position: relative;
+  overflow: auto;
+  background: #000;
+  /* height: calc(100vh - [height of statusBar+controls]); */
+  /* We use 60vh here for example to allow some view on desktop, 
+     on mobile this can be adjusted to fill screen */
+  height: 60vh;
+  border-top: 2px solid #333;
+}
+#cityMap {
+  position: relative;
+  width: 2000px;
+  height: 2000px;
+  background: linear-gradient(#0b3d91, #095086); /* gradient sky-like background */
+}
+/* Day/Night visual effect on city map */
+#cityMap.day {
+  /* lighter background for daytime (sky blue) */
+  background: linear-gradient(#87CEEB, #89BFFA);
+}
+#cityMap.night {
+  /* darker background for nighttime (navy) */
+  background: linear-gradient(#051937, #004d7a);
+}
+
+/* Example building and vehicle elements */
+.building {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: url('https://via.placeholder.com/24/cccccc?text=B') no-repeat center;
+  /* 'B' stands for building placeholder; ideally use an icon */
+}
+.car {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: url('https://via.placeholder.com/16/ff0000?text=C') no-repeat center;
+  /* 'C' for car placeholder; red dot as car */
+  border-radius: 50%;
+}
+
+/* Make sure content scales nicely on small screens */
+@media (max-width: 600px) {
+  h1 { font-size: 1.2em; }
+  #controls button { font-size: 0.9em; padding: 0.4em 0.8em; }
+  #mapContainer { height: 50vh; } /* take half screen on mobile for map */
+}
