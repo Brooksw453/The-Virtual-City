@@ -28,16 +28,37 @@ const workerClasses = ['worker1', 'worker2', 'worker3'];
 let cars = [];       // for car objects { elem, vx, vy }
 let workersArray = []; // for worker objects { elem, vx, vy }
 
-// Initialize game (load saved state if any)
+// -----------------------
+// Collision Detection
+// -----------------------
+// Check if a rectangle (x, y, width, height) collides with any building
+function checkCollision(x, y, width, height) {
+  const buildings = document.querySelectorAll('#cityMap .building');
+  for (let building of buildings) {
+    const bx = building.offsetLeft;
+    const by = building.offsetTop;
+    const bw = building.offsetWidth;
+    const bh = building.offsetHeight;
+    if (x < bx + bw && x + width > bx && y < by + bh && y + height > by) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// -----------------------
+// Initialization
+// -----------------------
 function initGame() {
   loadGame();
   updateStatusBar();
-  // Start the game logic loop and animation loop
   startGameLogicLoop();
   startAnimationLoop();
 }
   
-// Purchase functionality for skyscraper, car, or worker
+// -----------------------
+// Purchase Functions
+// -----------------------
 function buy(type) {
   if (type === 'skyscraper' && money >= skyscraperCost) {
     money -= skyscraperCost;
@@ -76,7 +97,9 @@ function buy(type) {
   saveGame();
 }
 
-// Add a skyscraper with a random style to the map
+// -----------------------
+// Add Elements to Map
+// -----------------------
 function addBuildingToMap() {
   const map = document.getElementById('cityMap');
   const building = document.createElement('div');
@@ -88,7 +111,6 @@ function addBuildingToMap() {
   map.appendChild(building);
 }
 
-// Add a car with a random style to the map and start its movement
 function addCarToMap() {
   const map = document.getElementById('cityMap');
   const carElem = document.createElement('div');
@@ -98,13 +120,12 @@ function addCarToMap() {
   carElem.style.left = Math.floor(Math.random() * (map.offsetWidth - 30)) + "px";
   carElem.style.top = Math.floor(Math.random() * (map.offsetHeight - 30)) + "px";
   map.appendChild(carElem);
-  // Set initial velocity; increase multiplier if needed for more visible movement
-  let vx = Math.random() < 0.5 ? 2 : -2;
-  let vy = 0; // initially horizontal movement
+  // For vertical movement, set horizontal velocity to 0 and choose a vertical speed.
+  let vx = 0;
+  let vy = Math.random() < 0.5 ? 2 : -2;
   cars.push({ elem: carElem, vx: vx, vy: vy });
 }
 
-// Add a worker with a random style to the map and set it to move
 function addWorkerToMap() {
   const map = document.getElementById('cityMap');
   const worker = document.createElement('div');
@@ -115,13 +136,15 @@ function addWorkerToMap() {
   worker.style.left = Math.floor(Math.random() * (map.offsetWidth - 20)) + "px";
   worker.style.top = Math.floor(Math.random() * (map.offsetHeight - 20)) + "px";
   map.appendChild(worker);
-  // Set random movement velocities for the worker (increase for better visibility)
+  // Set random movement velocities for workers.
   let vx = Math.random() < 0.5 ? 1 : -1;
   let vy = Math.random() < 0.5 ? 1 : -1;
   workersArray.push({ elem: worker, vx: vx, vy: vy });
 }
 
-// Start a job – show a job worker indicator on the map
+// -----------------------
+// Job Functions
+// -----------------------
 function startJob() {
   const select = document.getElementById('jobSelect');
   const job = select.value;
@@ -141,7 +164,6 @@ function startJob() {
   }
 }
 
-// Finish a job and remove the job indicator
 function finishJob() {
   jobActive = false;
   let reward = 0;
@@ -161,7 +183,9 @@ function finishJob() {
   saveGame();
 }
 
-// Upgrade workers to double their output
+// -----------------------
+// Upgrade Functions
+// -----------------------
 function upgradeWorkers() {
   if (money >= 1000 && !workersUpgraded) {
     money -= 1000;
@@ -172,7 +196,6 @@ function upgradeWorkers() {
   }
 }
 
-// Upgrade cars to flying cars – update their CSS class and allow vertical movement
 function upgradeCars() {
   if (money >= 2000 && !carsUpgraded) {
     money -= 2000;
@@ -189,7 +212,9 @@ function upgradeCars() {
   }
 }
 
-// Rebirth (prestige) resets the game but grants a permanent bonus
+// -----------------------
+// Rebirth (Prestige)
+// -----------------------
 function rebirth() {
   if (confirm("Rebirth will restart your city for a bonus. Continue?")) {
     rebirthCount += 1;
@@ -219,7 +244,9 @@ function rebirth() {
   }
 }
 
-// Update the status bar and map day/night appearance
+// -----------------------
+// Status Bar & Time
+// -----------------------
 function updateStatusBar() {
   const dayName = daysOfWeek[currentDayIndex];
   const phase = (totalSeconds % dayLengthSeconds < (dayLengthSeconds - nightLengthSeconds)) ? "Day" : "Night";
@@ -230,9 +257,9 @@ function updateStatusBar() {
   document.getElementById('money').textContent = money;
 }
 
-// ---------------------
+// -----------------------
 // Game Logic Loop (1 sec)
-// ---------------------
+// -----------------------
 function startGameLogicLoop() {
   setInterval(() => {
     money += incomePerSec;
@@ -251,9 +278,9 @@ function startGameLogicLoop() {
   }, 1000);
 }
 
-// ---------------------
+// -----------------------
 // Animation Loop (50 ms)
-// ---------------------
+// -----------------------
 function startAnimationLoop() {
   setInterval(() => {
     updateVehicles();
@@ -261,51 +288,61 @@ function startAnimationLoop() {
   }, 50);
 }
 
-// Update moving cars on the map
+// -----------------------
+// Update Moving Cars (Vertical Only)
+// -----------------------
 function updateVehicles() {
-  const mapWidth = document.getElementById('cityMap').offsetWidth;
-  const mapHeight = document.getElementById('cityMap').offsetHeight;
+  const map = document.getElementById('cityMap');
+  const mapHeight = map.offsetHeight;
   cars.forEach(car => {
-    let x = car.elem.offsetLeft;
     let y = car.elem.offsetTop;
-    x += car.vx;
     y += car.vy;
-    if (x < 0 || x > mapWidth - car.elem.offsetWidth) {
-      car.vx *= -1;
-      x = Math.max(0, Math.min(x, mapWidth - car.elem.offsetWidth));
-    }
     if (y < 0 || y > mapHeight - car.elem.offsetHeight) {
       car.vy *= -1;
-      y = Math.max(0, Math.min(y, mapHeight - car.elem.offsetHeight));
+      y = car.elem.offsetTop + car.vy;
     }
-    car.elem.style.left = x + "px";
     car.elem.style.top = y + "px";
   });
 }
 
-// Update moving workers on the map
+// -----------------------
+// Update Moving Workers with Collision Detection
+// -----------------------
 function updateWorkers() {
-  const mapWidth = document.getElementById('cityMap').offsetWidth;
-  const mapHeight = document.getElementById('cityMap').offsetHeight;
+  const map = document.getElementById('cityMap');
+  const mapWidth = map.offsetWidth;
+  const mapHeight = map.offsetHeight;
   workersArray.forEach(worker => {
     let x = worker.elem.offsetLeft;
     let y = worker.elem.offsetTop;
-    x += worker.vx;
-    y += worker.vy;
-    if (x < 0 || x > mapWidth - worker.elem.offsetWidth) {
+    const width = worker.elem.offsetWidth;
+    const height = worker.elem.offsetHeight;
+    let newX = x + worker.vx;
+    let newY = y + worker.vy;
+    // Bounce off map edges
+    if (newX < 0 || newX > mapWidth - width) {
       worker.vx *= -1;
-      x = Math.max(0, Math.min(x, mapWidth - worker.elem.offsetWidth));
+      newX = x + worker.vx;
     }
-    if (y < 0 || y > mapHeight - worker.elem.offsetHeight) {
+    if (newY < 0 || newY > mapHeight - height) {
       worker.vy *= -1;
-      y = Math.max(0, Math.min(y, mapHeight - worker.elem.offsetHeight));
+      newY = y + worker.vy;
     }
-    worker.elem.style.left = x + "px";
-    worker.elem.style.top = y + "px";
+    // Check for collision with buildings; if colliding, invert direction
+    if (checkCollision(newX, newY, width, height)) {
+      worker.vx *= -1;
+      worker.vy *= -1;
+      newX = x + worker.vx;
+      newY = y + worker.vy;
+    }
+    worker.elem.style.left = newX + "px";
+    worker.elem.style.top = newY + "px";
   });
 }
 
-// Save and load game state using localStorage
+// -----------------------
+// Save & Load Game State
+// -----------------------
 function saveGame() {
   try {
     const state = {
