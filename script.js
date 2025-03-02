@@ -24,8 +24,9 @@ const skyscraperClasses = ['skyscraper1', 'skyscraper2', 'skyscraper3'];
 const carClasses = ['car1', 'car2', 'car3'];
 const workerClasses = ['worker1', 'worker2', 'worker3'];
 
-// Array to hold car objects (for movement)
-let cars = [];
+// Arrays to hold moving elements
+let cars = [];       // for car objects { elem, vx, vy }
+let workersArray = []; // for worker objects { elem, vx, vy }
 
 // Initialize game (load saved state if any)
 function initGame() {
@@ -96,11 +97,11 @@ function addCarToMap() {
   carElem.style.top = Math.floor(Math.random() * (map.offsetHeight - 30)) + "px";
   map.appendChild(carElem);
   let vx = Math.random() < 0.5 ? 1 : -1;
-  let vy = 0;
+  let vy = 0; // initially horizontal movement
   cars.push({ elem: carElem, vx: vx, vy: vy });
 }
 
-// Add a worker with a random style to the map
+// Add a worker with a random style to the map and set it to move
 function addWorkerToMap() {
   const map = document.getElementById('cityMap');
   const worker = document.createElement('div');
@@ -111,6 +112,10 @@ function addWorkerToMap() {
   worker.style.left = Math.floor(Math.random() * (map.offsetWidth - 20)) + "px";
   worker.style.top = Math.floor(Math.random() * (map.offsetHeight - 20)) + "px";
   map.appendChild(worker);
+  // Set random movement velocities for the worker
+  let vx = Math.random() < 0.5 ? 1 : -1;
+  let vy = Math.random() < 0.5 ? 1 : -1;
+  workersArray.push({ elem: worker, vx: vx, vy: vy });
 }
 
 // Start a job – show a job worker indicator on the map
@@ -193,6 +198,7 @@ function rebirth() {
     incomePerSec = 1 + rebirthCount;
     document.getElementById('cityMap').innerHTML = "";
     cars = [];
+    workersArray = [];
     totalSeconds = 0;
     currentDayIndex = 0;
     jobActive = false;
@@ -221,7 +227,7 @@ function updateStatusBar() {
   document.getElementById('money').textContent = money;
 }
 
-// Main game loop: update income, time, jobs, and car movements
+// Main game loop: update income, time, jobs, and moving elements
 setInterval(() => {
   money += incomePerSec;
   document.getElementById('money').textContent = money;
@@ -234,6 +240,7 @@ setInterval(() => {
     finishJob();
   }
   updateVehicles();
+  updateWorkers();
   if (totalSeconds % 5 === 0) {
     saveGame();
   }
@@ -258,6 +265,29 @@ function updateVehicles() {
     }
     car.elem.style.left = x + "px";
     car.elem.style.top = y + "px";
+  });
+}
+
+// Update moving workers on the map
+function updateWorkers() {
+  const mapWidth = document.getElementById('cityMap').offsetWidth;
+  const mapHeight = document.getElementById('cityMap').offsetHeight;
+  workersArray.forEach(worker => {
+    let x = worker.elem.offsetLeft;
+    let y = worker.elem.offsetTop;
+    // Move a bit slower than cars
+    x += worker.vx;
+    y += worker.vy;
+    if (x < 0 || x > mapWidth - worker.elem.offsetWidth) {
+      worker.vx *= -1;
+      x = Math.max(0, Math.min(x, mapWidth - worker.elem.offsetWidth));
+    }
+    if (y < 0 || y > mapHeight - worker.elem.offsetHeight) {
+      worker.vy *= -1;
+      y = Math.max(0, Math.min(y, mapHeight - worker.elem.offsetHeight));
+    }
+    worker.elem.style.left = x + "px";
+    worker.elem.style.top = y + "px";
   });
 }
 
@@ -303,6 +333,9 @@ function loadGame() {
       // Recreate dynamic elements based on saved counts
       for (let i = 0; i < skyscraperCount; i++) { addBuildingToMap(); }
       for (let i = 0; i < carCount; i++) { addCarToMap(); }
+      // For workers, assume each purchase added one moving worker
+      // You might also store their positions in a more advanced save state
+      for (let i = 0; i < workerCount; i++) { addWorkerToMap(); }
       if (workersUpgraded) {
         document.getElementById('upgradeWorkersBtn').disabled = true;
       }
@@ -324,4 +357,3 @@ function loadGame() {
 }
 
 initGame();
-
