@@ -98,7 +98,7 @@ button:disabled {
   position: absolute;
   width: 24px;
   height: 24px;
-  background: url('https://www.google.com/search?sca_esv=0087b02e22cc28fd&rlz=1C1VDKB_enUS1120US1120&sxsrf=AHTn8zqCd6ga04Ok2GlRtEc1FF73jS7AOA:1740925987101&q=futuristic+skyscraper+icon+svg&udm=2&fbs=ABzOT_CWdhQLP1FcmU5B0fn3xuWpA-dk4wpBWOGsoR7DG5zJBsxayPSIAqObp_AgjkUGqel41a-glE2Uq9eJ_Bs7HiCAYlFFGTExBAJINx8ozJBuW9tYgt7x4nGKBzIJLdcA_0du35JA7WotIj301qwlm-MI6XnPVA5h_sZG4-ikKpCqLqTrOyLtgYA77b8mnRSTrggaIFdb95JVTPAGmAzaZzaTm9Fw-w&sa=X&ved=2ahUKEwijj6rYzuuLAxVaMlkFHTwsLyUQtKgLegQIEhAB&biw=1536&bih=791&dpr=2.5#vhid=dGC_olsX3OBNNM&vssid=mosaic') no-repeat center;
+  background: url('images/skyscraper.jpeg') no-repeat center;
   /* 'B' stands for building placeholder; ideally use an icon */
 }
 .car {
