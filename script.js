@@ -355,6 +355,139 @@ function loadGame() {
     }
   }
 }
+// ... (previous game state variables and functions remain) ...
+
+// Modify the worker purchase to also add a worker icon to the map
+function buy(type) {
+  if (type === 'skyscraper' && money >= skyscraperCost) {
+    money -= skyscraperCost;
+    skyscraperCount++;
+    incomePerSec += 10;
+    skyscraperCost = Math.floor(skyscraperCost * costMultiplier);
+    document.getElementById('money').textContent = money;
+    document.getElementById('skyscraperCost').textContent = skyscraperCost;
+    addBuildingToMap();
+  }
+  else if (type === 'car' && money >= carCost) {
+    money -= carCost;
+    carCount++;
+    incomePerSec += 5;
+    carCost = Math.floor(carCost * costMultiplier);
+    document.getElementById('money').textContent = money;
+    document.getElementById('carCost').textContent = carCost;
+    addCarToMap();
+  }
+  else if (type === 'worker' && money >= workerCost) {
+    money -= workerCost;
+    workerCount++;
+    incomePerSec += 1;
+    workerCost = Math.floor(workerCost * costMultiplier);
+    document.getElementById('money').textContent = money;
+    document.getElementById('workerCost').textContent = workerCost;
+    addWorkerToMap();
+  }
+  if (!workersUpgraded && workerCount >= 5) {
+    document.getElementById('upgradeWorkersBtn').disabled = false;
+  }
+  if (!carsUpgraded && carCount >= 3) {
+    document.getElementById('upgradeCarsBtn').disabled = false;
+  }
+  saveGame();
+}
+
+// Add a futuristic skyscraper to the map
+function addBuildingToMap() {
+  const map = document.getElementById('cityMap');
+  const building = document.createElement('div');
+  building.className = 'building';
+  building.style.left = Math.floor(Math.random() * (map.offsetWidth - 60)) + "px";
+  building.style.top = Math.floor(Math.random() * (map.offsetHeight - 120)) + "px";
+  map.appendChild(building);
+}
+
+// Add a car to the map
+function addCarToMap() {
+  const map = document.getElementById('cityMap');
+  const carElem = document.createElement('div');
+  carElem.className = 'car';
+  carElem.style.left = Math.floor(Math.random() * (map.offsetWidth - 30)) + "px";
+  carElem.style.top = Math.floor(Math.random() * (map.offsetHeight - 30)) + "px";
+  map.appendChild(carElem);
+  let vx = Math.random() < 0.5 ? 1 : -1;
+  let vy = 0;
+  cars.push({ elem: carElem, vx: vx, vy: vy });
+}
+
+// Add a worker icon to the map
+function addWorkerToMap() {
+  const map = document.getElementById('cityMap');
+  const worker = document.createElement('div');
+  worker.className = 'worker';
+  worker.style.left = Math.floor(Math.random() * (map.offsetWidth - 20)) + "px";
+  worker.style.top = Math.floor(Math.random() * (map.offsetHeight - 20)) + "px";
+  map.appendChild(worker);
+}
+
+// When a job starts, display a job indicator on the map
+function startJob() {
+  const select = document.getElementById('jobSelect');
+  const job = select.value;
+  if (job && !jobActive) {
+    jobActive = true;
+    currentJob = job;
+    jobStartTime = totalSeconds;
+    document.getElementById('jobStatus').textContent = "Working as a " + job.charAt(0).toUpperCase() + job.slice(1) + "... (1 day)";
+    select.disabled = true;
+    document.getElementById('startJobBtn').disabled = true;
+    let jobWorkerElem = document.createElement('div');
+    jobWorkerElem.id = 'jobWorker';
+    jobWorkerElem.className = 'jobWorker';
+    document.getElementById('cityMap').appendChild(jobWorkerElem);
+    saveGame();
+  }
+}
+
+// When the job is finished, remove the job indicator
+function finishJob() {
+  jobActive = false;
+  let reward = 0;
+  if (currentJob === "banker") reward = 500;
+  if (currentJob === "bodyguard") reward = 400;
+  if (currentJob === "chef") reward = 300;
+  if (currentJob === "servant") reward = 200;
+  money += reward;
+  document.getElementById('money').textContent = money;
+  document.getElementById('jobStatus').textContent = 
+    currentJob.charAt(0).toUpperCase() + currentJob.slice(1) + " job complete! Earned $" + reward;
+  let jobWorkerElem = document.getElementById('jobWorker');
+  if (jobWorkerElem) {
+    jobWorkerElem.remove();
+  }
+  document.getElementById('jobSelect').disabled = false;
+  document.getElementById('startJobBtn').disabled = false;
+  currentJob = "";
+  saveGame();
+}
+
+// Upgrade cars to flying cars: update their movement and change their class to show a flying car image
+function upgradeCars() {
+  if (money >= 2000 && !carsUpgraded) {
+    money -= 2000;
+    carsUpgraded = true;
+    cars.forEach(car => {
+      if (car.vy === 0) {
+        car.vy = Math.random() < 0.5 ? 1 : -1;
+      }
+      car.elem.classList.remove('car');
+      car.elem.classList.add('flyingCar');
+    });
+    document.getElementById('upgradeCarsBtn').disabled = true;
+    saveGame();
+  }
+}
+
+// ... (rest of the game loop and save/load functions remain unchanged) ...
+
 
 // Start the game once everything is set up
 initGame();
