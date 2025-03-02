@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Ensure mobile responsiveness -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Futuristic City Builder Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header / Stats Display -->
+  <header id="statusBar">
+    <h1>🌆 Futuristic City Builder</h1>
+    <p id="gameDay">Monday, Day 1 <span id="dayPhase">Day</span></p>
+    <p id="moneyDisplay">Money: $<span id="money">0</span></p>
+  </header>
+
+  <!-- Controls for buying and actions -->
+  <section id="controls">
+    <div class="buy-buttons">
+      <button id="buySkyscraper" onclick="buy('skyscraper')">
+        Buy Skyscraper ($<span id="skyscraperCost">100</span>)
+      </button>
+      <button id="buyCar" onclick="buy('car')">
+        Buy Car ($<span id="carCost">200</span>)
+      </button>
+      <button id="buyWorker" onclick="buy('worker')">
+        Hire Worker ($<span id="workerCost">50</span>)
+      </button>
+    </div>
+    <div class="jobs-panel">
+      <label for="jobSelect">Take a Job:</label>
+      <select id="jobSelect">
+        <option value="">-- Select Job --</option>
+        <option value="banker">Banker (1 day)</option>
+        <option value="bodyguard">Bodyguard (1 day)</option>
+        <option value="chef">Chef (1 day)</option>
+        <option value="servant">Servant (1 day)</option>
+      </select>
+      <button id="startJobBtn" onclick="startJob()">Start Job</button>
+      <p id="jobStatus">No active job</p>
+    </div>
+    <div class="upgrade-panel">
+      <!-- Upgrade buttons (initially disabled) -->
+      <button id="upgradeWorkersBtn" onclick="upgradeWorkers()" disabled>
+        Upgrade Workers (2× output) - $1000
+      </button>
+      <button id="upgradeCarsBtn" onclick="upgradeCars()" disabled>
+        Upgrade Cars to Flying - $2000
+      </button>
+    </div>
+    <div class="rebirth-panel">
+      <button id="rebirthBtn" onclick="rebirth()">Rebirth (Prestige Reset)</button>
+    </div>
+  </section>
+
+  <!-- Scrollable City Map Area -->
+  <section id="mapContainer">
+    <div id="cityMap">
+      <!-- Dynamic city elements (buildings, vehicles) will be added here -->
+    </div>
+  </section>
+
+  <!-- Audio element for background music -->
+  <audio id="bgMusic" loop></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
