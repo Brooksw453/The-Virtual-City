@@ -32,7 +32,9 @@ let workersArray = []; // for worker objects { elem, vx, vy }
 function initGame() {
   loadGame();
   updateStatusBar();
-  // Music functionality could be added here if desired
+  // Start the game logic loop and animation loop
+  startGameLogicLoop();
+  startAnimationLoop();
 }
   
 // Purchase functionality for skyscraper, car, or worker
@@ -96,7 +98,8 @@ function addCarToMap() {
   carElem.style.left = Math.floor(Math.random() * (map.offsetWidth - 30)) + "px";
   carElem.style.top = Math.floor(Math.random() * (map.offsetHeight - 30)) + "px";
   map.appendChild(carElem);
-  let vx = Math.random() < 0.5 ? 1 : -1;
+  // Set initial velocity; increase multiplier if needed for more visible movement
+  let vx = Math.random() < 0.5 ? 2 : -2;
   let vy = 0; // initially horizontal movement
   cars.push({ elem: carElem, vx: vx, vy: vy });
 }
@@ -112,7 +115,7 @@ function addWorkerToMap() {
   worker.style.left = Math.floor(Math.random() * (map.offsetWidth - 20)) + "px";
   worker.style.top = Math.floor(Math.random() * (map.offsetHeight - 20)) + "px";
   map.appendChild(worker);
-  // Set random movement velocities for the worker
+  // Set random movement velocities for the worker (increase for better visibility)
   let vx = Math.random() < 0.5 ? 1 : -1;
   let vy = Math.random() < 0.5 ? 1 : -1;
   workersArray.push({ elem: worker, vx: vx, vy: vy });
@@ -178,7 +181,7 @@ function upgradeCars() {
       car.elem.classList.remove(...carClasses);
       car.elem.classList.add('flyingCar');
       if (car.vy === 0) {
-        car.vy = Math.random() < 0.5 ? 1 : -1;
+        car.vy = Math.random() < 0.5 ? 2 : -2;
       }
     });
     document.getElementById('upgradeCarsBtn').disabled = true;
@@ -227,24 +230,36 @@ function updateStatusBar() {
   document.getElementById('money').textContent = money;
 }
 
-// Main game loop: update income, time, jobs, and moving elements
-setInterval(() => {
-  money += incomePerSec;
-  document.getElementById('money').textContent = money;
-  totalSeconds += 1;
-  if (totalSeconds % dayLengthSeconds === 0) {
-    currentDayIndex = (currentDayIndex + 1) % 7;
-  }
-  updateStatusBar();
-  if (jobActive && (totalSeconds - jobStartTime >= dayLengthSeconds)) {
-    finishJob();
-  }
-  updateVehicles();
-  updateWorkers();
-  if (totalSeconds % 5 === 0) {
-    saveGame();
-  }
-}, 1000);
+// ---------------------
+// Game Logic Loop (1 sec)
+// ---------------------
+function startGameLogicLoop() {
+  setInterval(() => {
+    money += incomePerSec;
+    document.getElementById('money').textContent = money;
+    totalSeconds += 1;
+    if (totalSeconds % dayLengthSeconds === 0) {
+      currentDayIndex = (currentDayIndex + 1) % 7;
+    }
+    updateStatusBar();
+    if (jobActive && (totalSeconds - jobStartTime >= dayLengthSeconds)) {
+      finishJob();
+    }
+    if (totalSeconds % 5 === 0) {
+      saveGame();
+    }
+  }, 1000);
+}
+
+// ---------------------
+// Animation Loop (50 ms)
+// ---------------------
+function startAnimationLoop() {
+  setInterval(() => {
+    updateVehicles();
+    updateWorkers();
+  }, 50);
+}
 
 // Update moving cars on the map
 function updateVehicles() {
@@ -253,8 +268,8 @@ function updateVehicles() {
   cars.forEach(car => {
     let x = car.elem.offsetLeft;
     let y = car.elem.offsetTop;
-    x += car.vx * 2;
-    y += car.vy * 2;
+    x += car.vx;
+    y += car.vy;
     if (x < 0 || x > mapWidth - car.elem.offsetWidth) {
       car.vx *= -1;
       x = Math.max(0, Math.min(x, mapWidth - car.elem.offsetWidth));
@@ -275,7 +290,6 @@ function updateWorkers() {
   workersArray.forEach(worker => {
     let x = worker.elem.offsetLeft;
     let y = worker.elem.offsetTop;
-    // Move a bit slower than cars
     x += worker.vx;
     y += worker.vy;
     if (x < 0 || x > mapWidth - worker.elem.offsetWidth) {
@@ -333,14 +347,12 @@ function loadGame() {
       // Recreate dynamic elements based on saved counts
       for (let i = 0; i < skyscraperCount; i++) { addBuildingToMap(); }
       for (let i = 0; i < carCount; i++) { addCarToMap(); }
-      // For workers, assume each purchase added one moving worker
-      // You might also store their positions in a more advanced save state
       for (let i = 0; i < workerCount; i++) { addWorkerToMap(); }
       if (workersUpgraded) {
         document.getElementById('upgradeWorkersBtn').disabled = true;
       }
       if (carsUpgraded) {
-        cars.forEach(car => { if (car.vy === 0) car.vy = 1; });
+        cars.forEach(car => { if (car.vy === 0) car.vy = 2; });
         document.getElementById('upgradeCarsBtn').disabled = true;
       }
       if (jobActive) {
