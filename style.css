@@ -1,79 +1,44 @@
-/* Basic reset and typography */
+/* Global styles */
 body {
   margin: 0;
   font-family: sans-serif;
-  background: #111; /* dark background for contrast */
+  background: #111;
   color: #f0f0f0;
 }
-h1 {
-  font-size: 1.5em;
-  margin: 0.5em;
-  text-align: center;
-}
-
-/* Status bar at top */
-#statusBar {
+header#statusBar {
   background: #333;
-  padding: 0.5em;
+  padding: 10px;
   text-align: center;
 }
-#statusBar p {
-  margin: 0.2em;
+header#statusBar h1 {
+  margin: 5px;
 }
-
-/* Controls section styling */
 #controls {
   background: #222;
-  padding: 0.5em;
+  padding: 10px;
   text-align: center;
 }
-.buy-buttons button, 
-.jobs-panel button, 
-.upgrade-panel button, 
-.rebirth-panel button {
-  margin: 0.3em;
-  padding: 0.5em 1em;
-  font-size: 1em;
+#controls button {
+  margin: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   background: #444;
   color: #fff;
 }
-.buy-buttons button:hover:enabled,
-.jobs-panel button:hover:enabled,
-.upgrade-panel button:hover:enabled,
-.rebirth-panel button:hover:enabled {
+#controls button:hover:enabled {
   background: #666;
   cursor: pointer;
 }
-button:disabled {
+#controls button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
-/* Jobs panel and others spacing */
-#controls .jobs-panel, 
-#controls .upgrade-panel, 
-#controls .rebirth-panel {
-  margin: 0.5em 0;
-}
-#controls label {
-  margin-right: 0.5em;
-}
-#jobStatus {
-  font-size: 0.9em;
-  color: #ccc;
-  margin-top: 0.3em;
-}
-
-/* Map container fills remaining viewport height */
 #mapContainer {
   position: relative;
   overflow: auto;
   background: #000;
-  /* height: calc(100vh - [height of statusBar+controls]); */
-  /* We use 60vh here for example to allow some view on desktop, 
-     on mobile this can be adjusted to fill screen */
   height: 60vh;
   border-top: 2px solid #333;
 }
@@ -81,89 +46,122 @@ button:disabled {
   position: relative;
   width: 2000px;
   height: 2000px;
-  background: linear-gradient(#0b3d91, #095086); /* gradient sky-like background */
+  background: linear-gradient(135deg, #001, #123);
 }
-/* Day/Night visual effect on city map */
 #cityMap.day {
-  /* lighter background for daytime (sky blue) */
-  background: linear-gradient(#87CEEB, #89BFFA);
+  background: linear-gradient(135deg, #89CFF0, #66B3FF);
 }
 #cityMap.night {
-  /* darker background for nighttime (navy) */
-  background: linear-gradient(#051937, #004d7a);
+  background: linear-gradient(135deg, #001, #123);
 }
 
-/* Example building and vehicle elements */
+/* ICON DESIGNS */
+
+/* Skyscrapers – three variants */
 .building {
   position: absolute;
-  width: 24px;
-  height: 24px;
-  background: url('images/skyscraper.jpeg') no-repeat center;
-  /* 'B' stands for building placeholder; ideally use an icon */
 }
-.car {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  background: url('https://via.placeholder.com/16/ff0000?text=C') no-repeat center;
-  /* 'C' for car placeholder; red dot as car */
-  border-radius: 50%;
-}
-
-/* Make sure content scales nicely on small screens */
-@media (max-width: 600px) {
-  h1 { font-size: 1.2em; }
-  #controls button { font-size: 0.9em; padding: 0.4em 0.8em; }
-  #mapContainer { height: 50vh; } /* take half screen on mobile for map */
-}
-/* ... existing styles remain ... */
-
-/* Updated futuristic skyscraper style */
-.building {
-  position: absolute;
-  width: 50px;
+.skyscraper1 {
+  width: 40px;
   height: 100px;
-  background: url('https://via.placeholder.com/50x100/00FFFF/000000?text=Sky') no-repeat center;
-  background-size: contain;
+  background: linear-gradient(45deg, #0ff, #00f);
+  border: 2px solid #fff;
+  border-radius: 4px;
+}
+.skyscraper2 {
+  width: 50px;
+  height: 90px;
+  background: linear-gradient(45deg, #ff0, #f00);
+  transform: skewX(-10deg);
+}
+.skyscraper3 {
+  width: 30px;
+  height: 120px;
+  background: linear-gradient(45deg, #0f0, #090);
+  clip-path: polygon(0% 0%, 100% 10%, 90% 100%, 10% 100%);
 }
 
-/* Updated car style */
+/* Cars – three variants */
 .car {
   position: absolute;
+}
+.car1 {
   width: 30px;
   height: 15px;
-  background: url('https://via.placeholder.com/30x15/ff0000/ffffff?text=Car') no-repeat center;
-  background-size: contain;
+  background: #f44336;
+  border-radius: 3px;
 }
-
-/* Flying car style for upgraded vehicles */
+.car2 {
+  width: 30px;
+  height: 15px;
+  background: #3f51b5;
+  border-radius: 3px;
+}
+.car3 {
+  width: 30px;
+  height: 15px;
+  background: #4caf50;
+  border-radius: 3px;
+}
+/* Flying cars (after upgrade) */
 .flyingCar {
-  position: absolute;
   width: 30px;
   height: 15px;
-  background: url('https://via.placeholder.com/30x15/ff00ff/ffffff?text=Fly') no-repeat center;
-  background-size: contain;
+  background: #e91e63;
+  border-radius: 3px;
+  box-shadow: 0 0 5px 2px #ffeb3b;
 }
 
-/* Worker icon style */
+/* Workers – three variants */
 .worker {
   position: absolute;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+}
+.worker1 {
   width: 20px;
   height: 20px;
-  background: url('https://via.placeholder.com/20/00ff00/000000?text=W') no-repeat center;
-  background-size: contain;
+  background: #9c27b0;
+}
+.worker2 {
+  width: 20px;
+  height: 20px;
+  background: #ff9800;
+}
+.worker3 {
+  width: 20px;
+  height: 20px;
+  background: #03a9f4;
 }
 
-/* Job indicator style (appears when a job is active) */
+/* Job worker indicator (for active jobs) */
 .jobWorker {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  background: url('https://via.placeholder.com/40/ffff00/000000?text=Job') no-repeat center;
-  background-size: contain;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 0, 0.7);
+  border: 2px dashed #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  header#statusBar h1 { font-size: 1.2em; }
+  #controls button { font-size: 12px; padding: 6px 10px; }
+  #mapContainer { height: 50vh; }
 }
 
