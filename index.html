@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <!-- Ensure mobile responsiveness -->
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Futuristic City Builder Game</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <!-- Ensure proper scaling on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Futuristic City Builder</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Header / Stats Display -->
   <header id="statusBar">
-    <h1>🌆 Futuristic City Builder</h1>
+    <h1>Futuristic City Builder</h1>
     <p id="gameDay">Monday, Day 1 <span id="dayPhase">Day</span></p>
     <p id="moneyDisplay">Money: $<span id="money">0</span></p>
   </header>
-
-  <!-- Controls for buying and actions -->
+  
   <section id="controls">
     <div class="buy-buttons">
       <button id="buySkyscraper" onclick="buy('skyscraper')">
@@ -42,7 +39,6 @@
       <p id="jobStatus">No active job</p>
     </div>
     <div class="upgrade-panel">
-      <!-- Upgrade buttons (initially disabled) -->
       <button id="upgradeWorkersBtn" onclick="upgradeWorkers()" disabled>
         Upgrade Workers (2× output) - $1000
       </button>
@@ -54,17 +50,15 @@
       <button id="rebirthBtn" onclick="rebirth()">Rebirth (Prestige Reset)</button>
     </div>
   </section>
-
-  <!-- Scrollable City Map Area -->
+  
+  <!-- The map where your futuristic city appears -->
   <section id="mapContainer">
     <div id="cityMap">
-      <!-- Dynamic city elements (buildings, vehicles) will be added here -->
+      <!-- Dynamically added elements will appear here -->
     </div>
   </section>
-
-  <!-- Audio element for background music -->
-  <audio id="bgMusic" loop></audio>
-
+  
   <script src="script.js"></script>
 </body>
 </html>
+
