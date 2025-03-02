@@ -116,3 +116,54 @@ button:disabled {
   #controls button { font-size: 0.9em; padding: 0.4em 0.8em; }
   #mapContainer { height: 50vh; } /* take half screen on mobile for map */
 }
+/* ... existing styles remain ... */
+
+/* Updated futuristic skyscraper style */
+.building {
+  position: absolute;
+  width: 50px;
+  height: 100px;
+  background: url('https://via.placeholder.com/50x100/00FFFF/000000?text=Sky') no-repeat center;
+  background-size: contain;
+}
+
+/* Updated car style */
+.car {
+  position: absolute;
+  width: 30px;
+  height: 15px;
+  background: url('https://via.placeholder.com/30x15/ff0000/ffffff?text=Car') no-repeat center;
+  background-size: contain;
+}
+
+/* Flying car style for upgraded vehicles */
+.flyingCar {
+  position: absolute;
+  width: 30px;
+  height: 15px;
+  background: url('https://via.placeholder.com/30x15/ff00ff/ffffff?text=Fly') no-repeat center;
+  background-size: contain;
+}
+
+/* Worker icon style */
+.worker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: url('https://via.placeholder.com/20/00ff00/000000?text=W') no-repeat center;
+  background-size: contain;
+}
+
+/* Job indicator style (appears when a job is active) */
+.jobWorker {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: url('https://via.placeholder.com/40/ffff00/000000?text=Job') no-repeat center;
+  background-size: contain;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
